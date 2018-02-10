@@ -1,0 +1,10 @@
+.FlexContainer {
+  display:flex;
+  margin-left: 10%;
+}
+
+.FlexContainer .Box {
+  background-color:blue;
+  margin: 20px;
+  padding:10px;
+}
