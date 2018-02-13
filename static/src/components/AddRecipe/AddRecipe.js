@@ -1,5 +1,5 @@
 import React from 'react';
-import classes from './AddIngredient.css';
+import classes from './AddRecipe.css';
 
 const addIngredient = (props) => {
   return (

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AddIngredient from '../../components/AddIngredient/AddIngredient';
+import AddRecipe from '../../components/AddRecipe/AddRecipe';
 import classes from './Layout.css';
 import Recipes from '../../components/Recipes/Recipes';
 import Ingredients from '../../components/Ingredients/Ingredients';
@@ -41,7 +41,7 @@ class Layout extends Component {
         <Ingredients
           currentRecipe={this.state.currentRecipe}
           ingredientList={this.state.recipes[this.state.currentRecipe]} className={classes.Box} />
-        <AddIngredient className={classes.Box}/>
+        <AddRecipe className={classes.Box}/>
 
 
       </div>
