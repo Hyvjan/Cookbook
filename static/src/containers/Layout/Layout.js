@@ -22,6 +22,12 @@ class Layout extends Component {
     this.setState({currentRecipe: index})
   }
 
+  addRecipeHandler = (newRecipe) => {
+    const oldRecipes = [...this.state.recipes]
+    const newRecipes = oldRecipes.push(newRecipe)
+    this.setState({'recipes': newRecipes, 'currentRecipe': this.state.recipes.length-1})
+  }
+
   render () {
 
     const recipeItem = this.state.recipes.map((recipe, index) => {
@@ -29,7 +35,9 @@ class Layout extends Component {
           <Recipes key={index} className={classes.Box}
             indexValue={index}
             clicked={() => this.showIngredientsHandler(index)}
-            singleRecipe={recipe} currentRecipe={this.state.currentRecipe}/>
+            singleRecipe={recipe}
+            callback={(newRecipe) => this.addRecipeHandler(newRecipe)}
+            currentRecipe={this.state.currentRecipe}/>
         )
     })
 
@@ -41,7 +49,7 @@ class Layout extends Component {
         <Ingredients
           currentRecipe={this.state.currentRecipe}
           ingredientList={this.state.recipes[this.state.currentRecipe]} className={classes.Box} />
-        <AddRecipe className={classes.Box}/>
+        <AddRecipe  className={classes.Box}/>
 
 
       </div>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import classes from './AddRecipe.css';
+import axios from 'axios'
 
 class AddIngredient extends Component {
 
@@ -30,7 +31,6 @@ class AddIngredient extends Component {
     const addJson = {}
     addJson[ingredient]=amount
     addJson['name']=recipe
-    //{ingredient : amount, 'name': recipe}
     oldIngredients.ingredients[ingredient]=amount
     oldIngredients.ingredients['name']=recipe
     const newIngredients = oldIngredients.ingredients
@@ -39,22 +39,34 @@ class AddIngredient extends Component {
     console.log(this.state)
   }
 
+  postRecipe = () => {
+    const data = {
+      ...this.state.ingredients
+    };
+    axios.post('127.0.0.1:5000/new_recipe', data)
+            .then(response => {
+                console.log(response);
+            });
+    }
+
   render () {
 
   return (
   <div className={classes.Container}>
-
+    <h1>Add new recipe</h1>
     <input type="text" value={this.state.currentRecipe}
       onChange={(evt) => this.currentRecipeHandler(evt)}
-      placeholder="Add recipe name"/>
+      placeholder="Add recipe name"/><br />
     <input type="text" value={this.state.ingredientToAdd}
       onChange={(evt) => this.currentIngredientHandler(evt)}
-      placeholder="Add ingredient name"/>
+      placeholder="Add ingredient name"/><br />
     <input type="text" value={this.state.amountToAdd}
       onChange={(evt) => this.currentAmountHandler(evt)}
-      placeholder="Add ingredient amount"/>
-    <button onClick={this.addIngredient}>Save ingredient</button>
-    <button >Save recipe</button>
+      placeholder="Add ingredient amount"/><br />
+    <button onClick={this.addIngredient}>Save ingredient</button><br />
+    <button
+      onClick={this.postRecipe}
+      >Save recipe</button>
   </div>
 )
 }

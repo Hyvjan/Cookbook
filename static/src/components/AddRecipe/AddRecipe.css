@@ -1,0 +1,22 @@
+.Container {
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 10px;
+  text-align: center;
+  background-color: brown;
+}
+
+.Container button {
+  margin-top: 5px;
+  background-color: green;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.Container input {
+  border-radius: 2px;
+  margin-top: 5px;
+}

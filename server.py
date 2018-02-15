@@ -9,5 +9,9 @@ app=Flask(__name__,
 def index():
     return render_template("index.html")
 
+@app.route('/new_post', methods=['POST'])
+def newPost():
+    print(response.json)
+
 if __name__== "__main__":
     app.run()
