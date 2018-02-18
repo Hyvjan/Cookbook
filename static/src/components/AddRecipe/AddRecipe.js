@@ -43,9 +43,12 @@ class AddIngredient extends Component {
     const data = {
       ...this.state.ingredients
     };
-    axios.post('127.0.0.1:5000/new_recipe', data)
+    axios.post('http://127.0.0.1:5000/new_recipe', data)
             .then(response => {
-                console.log(response);
+                console.log(response)
+            })
+            .catch(error => {
+              console.log(error.response)
             });
     }
 

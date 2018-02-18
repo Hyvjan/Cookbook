@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 
 app=Flask(__name__,
         static_url_path='',
@@ -9,9 +9,9 @@ app=Flask(__name__,
 def index():
     return render_template("index.html")
 
-@app.route('/new_post', methods=['POST'])
+@app.route('/new_recipe', methods=['POST'])
 def newPost():
-    print(response.json)
+    return jsonify({'response': 'came through'}), 200
 
 if __name__== "__main__":
     app.run()
