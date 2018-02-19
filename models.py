@@ -1,36 +1,11 @@
-import os
+from server import db, login
 
-#Import Flask
-from flask import Flask, render_template, request, jsonify
-
-#import stuff for database
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-
-#Import stuff for security
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin, LoginManager
 
-#Import configurations for flask
-from config import Config
+from flask_login import UserMixin
 
-#Define flask app
-app=Flask(__name__,
-        static_url_path='',
-        static_folder="static/build",
-            template_folder="static/build")
+from server import db, login
 
-#import configurations for flask
-app.config.from_object(Config)
-
-#define login_manager
-login = LoginManager(app)
-
-#Define database and Migrate
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-#Define models
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), index=True, unique=True)
@@ -64,17 +39,3 @@ class Ingredient(db.Model):
     name = db.Column(db.String(140))
     amount = db.Column(db.Numeric(6,2))
     unit = db.Column(db.String(5))
-
-
-#Below are routes
-#****************************************************************
-
-#serve REACT index.html
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-#Save new recipe
-@app.route('/new_recipe', methods=['POST'])
-def newPost():
-    return jsonify({'response': 'came through'}), 200
