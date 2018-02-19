@@ -77,4 +77,10 @@ def index():
 #Save new recipe
 @app.route('/new_recipe', methods=['POST'])
 def newPost():
+    for key in request.json.keys():
+        print(key)
     return jsonify({'response': 'came through'}), 200
+
+#Define main to run the server
+if __name__== "__main__":
+    app.run()

@@ -23,3 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 /cookbook
+app.db
+/migrations
+/__pycache__
