@@ -3,6 +3,7 @@ import AddRecipe from '../../components/AddRecipe/AddRecipe';
 import classes from './Layout.css';
 import Recipes from '../../components/Recipes/Recipes';
 import Ingredients from '../../components/Ingredients/Ingredients';
+import { Route } from 'react-router-dom';
 
 class Layout extends Component {
 
@@ -42,6 +43,13 @@ class Layout extends Component {
     })
 
     return (
+      <div>
+      {/*<p style={{textAlign: 'center'}}>Row for links</p>*/}
+      <ul style={{textAlign:'center', display:'flex'}}>
+        <p style={{marginRight:'5px'}}>link 1</p>
+        <p>link 2</p>
+      </ul>
+      <br/>
       <div className={classes.FlexContainer}>
         <ul>
         {recipeItem}
@@ -52,6 +60,7 @@ class Layout extends Component {
         <AddRecipe  className={classes.Box}/>
 
 
+      </div>
       </div>
     )
   }
