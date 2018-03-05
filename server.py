@@ -24,7 +24,7 @@ app=Flask(__name__,
 app.config.from_object(Config)
 
 #define login_manager
-login = LoginManager(app)
+#login = LoginManager(app)
 
 #Define database and Migrate
 db = SQLAlchemy(app)
@@ -48,22 +48,28 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 ingredients = db.Table('ingredients',
-    db.Column('ingredient_id', db.Integer, db.ForeignKey('ingredient.id'), primary_key=True),
-    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True)
-)
+    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), nullable=False),
+    db.Column('ingredient_id', db.Integer, db.ForeignKey('ingredient.id'), nullable=False),
+    db.PrimaryKeyConstraint('recipe_id', 'ingredient_id'))
 
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
-    ingredients = db.relationship('Ingredient', secondary=ingredients, lazy='subquery',
-        backref=db.backref('pages', lazy=True))
+    ingredients = db.relationship('Ingredient', secondary=ingredients,
+        backref='recipe')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<Recipe {}>'.format(self.name)
 
 class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
     amount = db.Column(db.Numeric(6,2))
     unit = db.Column(db.String(5))
+
+    def __repr__(self):
+        return '<Ingredient {}>'.format(self.name)
 
 
 #Below are routes
@@ -76,10 +82,24 @@ def index():
 
 #Save new recipe
 @app.route('/new_recipe', methods=['POST'])
-def newPost():
+def newRecipe():
+    user=User.query.get(1)
+    if not request.json or not 'name' in request.json:
+        abort(400)
+    recipe_name=request.json['name']
+    recipe=Recipe(name=recipe_name, user_id=user.id)
+    db.session.add(recipe)
+    db.session.commit()
     for key in request.json.keys():
-        print(key)
-    return jsonify({'response': 'came through'}), 200
+        if key != 'name':
+            key= Ingredient(name=key, amount=request.json[key], unit="g")
+            db.session.add(key)
+            db.session.commit()
+            recipe.ingredients.append(key)
+            db.session.commit()
+            print(str(recipe.ingredients))
+    return jsonify({'response': 'done'}), 200
+
 
 #Define main to run the server
 if __name__== "__main__":
