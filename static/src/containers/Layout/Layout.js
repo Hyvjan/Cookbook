@@ -51,13 +51,17 @@ class Layout extends Component {
       </ul>
       <br/>
       <div className={classes.FlexContainer}>
-        <ul>
-        {recipeItem}
-        </ul>
-        <Ingredients
+        <Route path="/" exact render={() => (
+          <ul>
+          {recipeItem}
+          </ul>
+        )} />
+        <Route path="/ingredients" component={ Ingredients } />
+        {/*<Ingredients
           currentRecipe={this.state.currentRecipe}
-          ingredientList={this.state.recipes[this.state.currentRecipe]} className={classes.Box} />
-        <AddRecipe  className={classes.Box}/>
+          ingredientList={this.state.recipes[this.state.currentRecipe]} className={classes.Box} />*/}
+        <Route path="/addRecipe" component={ AddRecipe } />
+        {/*<AddRecipe  className={classes.Box}/>*/}
 
 
       </div>
