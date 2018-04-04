@@ -3,7 +3,8 @@ import AddRecipe from '../../components/AddRecipe/AddRecipe';
 import classes from './Layout.css';
 import Recipes from '../../components/Recipes/Recipes';
 import Ingredients from '../../components/Ingredients/Ingredients';
-import { Route } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
+
 
 class Layout extends Component {
 
@@ -20,7 +21,7 @@ class Layout extends Component {
   }
 
   showIngredientsHandler = (index) => {
-    this.setState({currentRecipe: index})
+    this.setState({currentRecipe: index});
   }
 
   addRecipeHandler = (newRecipe) => {
@@ -46,24 +47,24 @@ class Layout extends Component {
       <div>
       {/*<p style={{textAlign: 'center'}}>Row for links</p>*/}
       <ul style={{textAlign:'center', display:'flex'}}>
-        <p style={{marginRight:'5px'}}>link 1</p>
-        <p>link 2</p>
+        <Link to="/">
+          <p style={{marginRight:'5px'}}>Recipes</p>
+        </Link>
+        <Link to="/addRecipe">
+          <p>Add new Recipe</p>
+        </Link>
       </ul>
       <br/>
       <div className={classes.FlexContainer}>
-        <Route path="/" exact render={() => (
           <ul>
           {recipeItem}
           </ul>
-        )} />
-        <Route path="/ingredients" component={ Ingredients } />
-        {/*<Ingredients
+        <Ingredients
           currentRecipe={this.state.currentRecipe}
-          ingredientList={this.state.recipes[this.state.currentRecipe]} className={classes.Box} />*/}
+          ingredientList={this.state.recipes[this.state.currentRecipe]}
+          className={classes.Box} />
         <Route path="/addRecipe" component={ AddRecipe } />
-        {/*<AddRecipe  className={classes.Box}/>*/}
-
-
+    
       </div>
       </div>
     )

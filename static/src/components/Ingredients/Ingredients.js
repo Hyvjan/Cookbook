@@ -3,6 +3,10 @@ import classes from './Ingredients.css';
 
 class Ingredients extends Component  {
 
+  componentDidMount() {
+    //console.log(this.props.match.params.name);
+  }
+
   render () {
 
     let ingredient = null;
