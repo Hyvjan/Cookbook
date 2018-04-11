@@ -5,9 +5,11 @@ import Recipes from '../../components/Recipes/Recipes';
 import Ingredients from '../../components/Ingredients/Ingredients';
 import { Route, Link } from 'react-router-dom';
 
+import {connect} from 'react-redux';
+import * as actionTypes from '../../store/Actions';
 
 class Layout extends Component {
-
+  /*
   state = {
     'recipes': [
       {'name': 'Omelet',
@@ -19,27 +21,20 @@ class Layout extends Component {
     ],
     'currentRecipe': -1
   }
-
+*/
   showIngredientsHandler = (index) => {
-    this.setState({currentRecipe: index});
-  }
-
-  addRecipeHandler = (newRecipe) => {
-    const oldRecipes = [...this.state.recipes]
-    const newRecipes = oldRecipes.push(newRecipe)
-    this.setState({'recipes': newRecipes, 'currentRecipe': this.state.recipes.length-1})
+    this.props.setCurrentRecipe(index);
   }
 
   render () {
 
-    const recipeItem = this.state.recipes.map((recipe, index) => {
+    const recipeItem = this.props.recipes.map((recipe, index) => {
         return (
           <Recipes key={index} className={classes.Box}
             indexValue={index}
             clicked={() => this.showIngredientsHandler(index)}
             singleRecipe={recipe}
-            callback={(newRecipe) => this.addRecipeHandler(newRecipe)}
-            currentRecipe={this.state.currentRecipe}/>
+            currentRecipe={this.props.currentRecipe}/>
         )
     })
 
@@ -60,8 +55,8 @@ class Layout extends Component {
           {recipeItem}
           </ul>
         <Ingredients
-          currentRecipe={this.state.currentRecipe}
-          ingredientList={this.state.recipes[this.state.currentRecipe]}
+          currentRecipe={this.props.currentRecipe}
+          ingredientList={this.props.recipes[this.props.currentRecipe]}
           className={classes.Box} />
         <Route path="/addRecipe" component={ AddRecipe } />
     
@@ -71,4 +66,17 @@ class Layout extends Component {
   }
 }
 
-export default Layout;
+const mapStateToProps = state => {
+    return {
+      recipes: state.recipes,
+      currentRecipe: state.currentRecipe,
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+      setCurrentRecipe: (currentRecipe) => dispatch({type:actionTypes.CURRENT_RECIPE, currentRecipe: currentRecipe}),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);
