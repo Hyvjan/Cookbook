@@ -80,6 +80,20 @@ class Ingredient(db.Model):
 def index():
     return render_template("index.html")
 
+#return recipes 
+@app.route('/recipes')
+def recipes():
+    payload= {'recipes':[], 'currentRecipe':-1}
+    recipes= Recipe.query.all()
+    for recipe in recipes:
+        ingredients= recipe.ingredients
+        data={'name': recipe.name}
+        for ingredient in ingredients:
+            data[ingredient.name]= float(ingredient.amount)
+        payload['recipes'].append(data)
+    print(payload)
+    return jsonify({'recipes': payload}), 200
+
 #Save new recipe
 @app.route('/new_recipe', methods=['POST'])
 def newRecipe():
