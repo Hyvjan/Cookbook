@@ -1,6 +1,6 @@
 import * as actionTypes from './Actions';
 
-const initialState = {
+/*const initialState = {
     'recipes': [
         {'name': 'Omelet',
         'egg': 2,
@@ -12,6 +12,10 @@ const initialState = {
         'makaroni': 100,
         'cheese':50},
     ],
+    'currentRecipe': -1
+};*/
+const initialState = {
+    'recipes': [],
     'currentRecipe': -1
 };
 
@@ -33,6 +37,13 @@ const reducer = (state=initialState, action) => {
                 ...state,
                 recipes: [...state.recipes],
                 currentRecipe: action.currentRecipe
+            }
+        case actionTypes.GET_RECIPES:
+            console.log("reducerissa payload on: " + action.payload);
+            return {
+                ...state,
+                recipes: [...action.payload.recipes],
+                currentRecipe: action.payload.currentRecipe
             }
         default:
             return state;

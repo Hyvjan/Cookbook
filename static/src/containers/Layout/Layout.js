@@ -7,6 +7,7 @@ import { Route, Link } from 'react-router-dom';
 
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/Actions';
+import { getRecipes} from '../../store/Actions';
 
 class Layout extends Component {
   /*
@@ -22,6 +23,12 @@ class Layout extends Component {
     'currentRecipe': -1
   }
 */
+
+  componentDidMount() {
+      this.props.getRecipes();
+      console.log("componentDidMount executed");
+  }
+
   showIngredientsHandler = (index) => {
     this.props.setCurrentRecipe(index);
   }
@@ -76,6 +83,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
       setCurrentRecipe: (currentRecipe) => dispatch({type:actionTypes.CURRENT_RECIPE, currentRecipe: currentRecipe}),
+      getRecipes: () => dispatch(getRecipes())
   }
 }
 

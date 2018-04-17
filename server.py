@@ -1,7 +1,7 @@
 import os
 
 #Import Flask
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, json, Response
 
 #import stuff for database
 from flask_sqlalchemy import SQLAlchemy
@@ -81,7 +81,7 @@ def index():
     return render_template("index.html")
 
 #return recipes 
-@app.route('/recipes')
+@app.route('/recipes', methods=['GET'])
 def recipes():
     payload= {'recipes':[], 'currentRecipe':-1}
     recipes= Recipe.query.all()
@@ -91,8 +91,9 @@ def recipes():
         for ingredient in ingredients:
             data[ingredient.name]= float(ingredient.amount)
         payload['recipes'].append(data)
-    print(payload)
+    #print(payload)
     return jsonify({'recipes': payload}), 200
+    #return Response(json.dumps(payload),  mimetype='application/json')
 
 #Save new recipe
 @app.route('/new_recipe', methods=['POST'])

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import classes from './AddRecipe.css';
-import axios from 'axios'
+import axios from 'axios';
 
 class AddIngredient extends Component {
 
