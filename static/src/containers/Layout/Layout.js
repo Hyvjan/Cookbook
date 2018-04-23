@@ -3,7 +3,7 @@ import AddRecipe from '../../components/AddRecipe/AddRecipe';
 import classes from './Layout.css';
 import Recipes from '../../components/Recipes/Recipes';
 import Ingredients from '../../components/Ingredients/Ingredients';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, withRouter } from 'react-router-dom';
 
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/Actions';
@@ -45,9 +45,10 @@ class Layout extends Component {
         )
     })
 
-    return (
-      <div>
-      {/*<p style={{textAlign: 'center'}}>Row for links</p>*/}
+    let linksList = null;
+
+    if (this.props.signedIn) {
+      linksList =
       <ul style={{textAlign:'center', display:'flex'}}>
         <Link to="/">
           <p style={{marginRight:'5px'}}>Recipes</p>
@@ -56,6 +57,20 @@ class Layout extends Component {
           <p>Add new Recipe</p>
         </Link>
       </ul>
+    } else {
+      linksList=
+      <ul style={{textAlign:'center', display:'flex'}}>
+        <Link to="/signIn">
+          <p style={{marginRight:'5px'}}>Sign In</p>
+        </Link>
+      </ul>
+    }   
+
+
+    return (
+      <div>
+      {/*<p style={{textAlign: 'center'}}>Row for links</p>*/}
+      {linksList}
       <br/>
       <div className={classes.FlexContainer}>
           <ul>
@@ -77,6 +92,7 @@ const mapStateToProps = state => {
     return {
       recipes: state.recipes,
       currentRecipe: state.currentRecipe,
+      signedIn: state.signedIn
     }
 }
 
@@ -87,4 +103,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Layout);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout));

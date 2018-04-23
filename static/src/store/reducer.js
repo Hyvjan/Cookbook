@@ -16,7 +16,8 @@ import * as actionTypes from './Actions';
 };*/
 const initialState = {
     'recipes': [],
-    'currentRecipe': -1
+    'currentRecipe': -1,
+    'signedIn': false
 };
 
 const reducer = (state=initialState, action) => {
