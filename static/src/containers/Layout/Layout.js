@@ -8,6 +8,7 @@ import { Route, Link, withRouter } from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/Actions';
 import { getRecipes} from '../../store/Actions';
+import SignIn from '../../components/SignIn/SignIn';
 
 class Layout extends Component {
   /*
@@ -46,6 +47,7 @@ class Layout extends Component {
     })
 
     let linksList = null;
+    let content = null;
 
     if (this.props.signedIn) {
       linksList =
@@ -57,6 +59,18 @@ class Layout extends Component {
           <p>Add new Recipe</p>
         </Link>
       </ul>
+
+      content =
+      <div className={classes.FlexContainer}>
+      <ul>
+      {recipeItem}
+      </ul>
+      <Ingredients
+        currentRecipe={this.props.currentRecipe}
+        ingredientList={this.props.recipes[this.props.currentRecipe]}
+        className={classes.Box} />
+      <Route path="/addRecipe" component={ AddRecipe } />
+    </div>
     } else {
       linksList=
       <ul style={{textAlign:'center', display:'flex'}}>
@@ -64,6 +78,12 @@ class Layout extends Component {
           <p style={{marginRight:'5px'}}>Sign In</p>
         </Link>
       </ul>
+
+      content = 
+          <div>
+             <Route path="/SignIn" component={ SignIn } />
+          </div>
+      
     }   
 
 
@@ -72,17 +92,7 @@ class Layout extends Component {
       {/*<p style={{textAlign: 'center'}}>Row for links</p>*/}
       {linksList}
       <br/>
-      <div className={classes.FlexContainer}>
-          <ul>
-          {recipeItem}
-          </ul>
-        <Ingredients
-          currentRecipe={this.props.currentRecipe}
-          ingredientList={this.props.recipes[this.props.currentRecipe]}
-          className={classes.Box} />
-        <Route path="/addRecipe" component={ AddRecipe } />
-    
-      </div>
+      {content}
       </div>
     )
   }
