@@ -1,7 +1,9 @@
 import os
 
 #Import Flask
-from flask import Flask, render_template, request, jsonify, json, Response
+from flask import Flask, render_template, request, jsonify, json, Response, g
+
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 
 #import stuff for database
 from flask_sqlalchemy import SQLAlchemy
@@ -24,7 +26,7 @@ app=Flask(__name__,
 app.config.from_object(Config)
 
 #define login_manager
-#login = LoginManager(app)
+login = LoginManager(app)
 
 #Define database and Migrate
 db = SQLAlchemy(app)
@@ -46,6 +48,24 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def generate_auth_token(self, expiration=600)
+        s= Serializer(app.config['SECRET_KEY'], expires_in= expiration)
+        return s.dumps({ 'id': self.id })
+
+    @staticmethod
+    def verify_auth_token(token):
+        s= Serializer(app.config['SECRET_KEY'])
+        try:
+            data= s.loads(token)
+        except SignatureExpired:
+            return None
+        except BadSignature:
+            return None
+        user= User.query.get(data['id'])
+        g.user = user
+        return user
+
 
 ingredients = db.Table('ingredients',
     db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), nullable=False),
@@ -72,6 +92,16 @@ class Ingredient(db.Model):
         return '<Ingredient {}>'.format(self.name)
 
 
+@login_manager.request_loader
+def load_user(request):
+    user= User.verify_auth_token(request.args.get('token'))
+    if not user:
+        user=User.query.filter_by(username=request.args.get('username')).first()
+        if not user or not user.check_password(request.args.get('password')):
+            return None
+    return user
+
+
 #Below are routes
 #****************************************************************
 
@@ -79,6 +109,12 @@ class Ingredient(db.Model):
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/signIn", methods=["POST"])
+@login_required
+def signIn():
+    token= g.user.generate_auth_token(600)
+    return jsonify({'token': token.decode('ascii')})
 
 #return recipes 
 @app.route('/recipes', methods=['GET'])

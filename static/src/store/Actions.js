@@ -5,6 +5,7 @@ export const REMOVE_RECIPE = "REMOVE_RECIPE";
 export const CURRENT_RECIPE = "CURRENT_RECIPE";
 export const GET_RECIPES = 'GET_RECIPES';
 export const ADD_RECIPES = "ADD_RECIPES";
+export const SIGN_IN = "SIGN_IN";
 
 export const addRecipes = (response) => {
     return {
