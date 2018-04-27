@@ -11,7 +11,7 @@ from flask_migrate import Migrate
 
 #Import stuff for security
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin, LoginManager
+from flask_login import UserMixin, LoginManager, login_required
 
 #Import configurations for flask
 from config import Config
@@ -49,7 +49,7 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def generate_auth_token(self, expiration=600)
+    def generate_auth_token(self, expiration=600):
         s= Serializer(app.config['SECRET_KEY'], expires_in= expiration)
         return s.dumps({ 'id': self.id })
 
@@ -92,13 +92,16 @@ class Ingredient(db.Model):
         return '<Ingredient {}>'.format(self.name)
 
 
-@login_manager.request_loader
+@login.request_loader
 def load_user(request):
-    user= User.verify_auth_token(request.args.get('token'))
-    if not user:
-        user=User.query.filter_by(username=request.args.get('username')).first()
-        if not user or not user.check_password(request.args.get('password')):
+    if('token' in request.json):
+        user= User.verify_auth_token(request.json['token'])
+    else:
+        user=User.query.filter_by(username=request.json['username']).first()
+        print("user arvo " + str(request.json['username']))
+        if not user or not user.check_password(request.json['password']):
             return None
+    g.user= user
     return user
 
 
