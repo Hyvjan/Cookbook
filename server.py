@@ -94,22 +94,40 @@ class Ingredient(db.Model):
 
 @login.request_loader
 def load_user(request):
-    if('token' in request.json):
-        user= User.verify_auth_token(request.json['token'])
-    else:
-        user=User.query.filter_by(username=request.json['username']).first()
-        print("user arvo " + str(request.json['username']))
-        if not user or not user.check_password(request.json['password']):
+    req_data= request.get_json()
+    #token= request.args.get("token")
+    #token= request.json['token']
+    if 'token' in req_data:
+        token= req_data['token'] 
+        user= User.verify_auth_token(token)
+        print("user is: {}".format(user))
+        if user:
+            g.user= user
+            return user
+        else:
             return None
-    g.user= user
-    return user
+    if 'username' in req_data and 'password' in req_data:
+        username= req_data["username"]
+        password= req_data["password"]
+        print("username: {}".format(username))
+        print("password: {}".format(password))
+        #username= request.json['username']
+        #password= request.json['password']
+        if username is not None and password is not None:
+            user=User.query.filter_by(username=username).first()
+            if not user or not user.check_password(password):
+                return None
+            else:
+                g.user= user
+                return user
+    return None
 
 
 #Below are routes
 #****************************************************************
 
 #serve REACT index.html
-@app.route("/")
+@app.route("/", methods=["GET"])
 def index():
     return render_template("index.html")
 
@@ -121,6 +139,7 @@ def signIn():
 
 #return recipes 
 @app.route('/recipes', methods=['GET'])
+@login_required
 def recipes():
     payload= {'recipes':[], 'currentRecipe':-1}
     recipes= Recipe.query.all()
@@ -136,6 +155,7 @@ def recipes():
 
 #Save new recipe
 @app.route('/new_recipe', methods=['POST'])
+@login_required
 def newRecipe():
     user=User.query.get(1)
     if not request.json or not 'name' in request.json:

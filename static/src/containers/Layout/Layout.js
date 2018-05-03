@@ -26,8 +26,9 @@ class Layout extends Component {
 */
 
   componentDidMount() {
+    if(this.props.signedIn){
       this.props.getRecipes();
-      console.log("componentDidMount executed");
+    }
   }
 
   showIngredientsHandler = (index) => {
