@@ -27,6 +27,7 @@ app.config.from_object(Config)
 
 #define login_manager
 login = LoginManager(app)
+login.init_app(app)
 
 #Define database and Migrate
 db = SQLAlchemy(app)
@@ -94,32 +95,35 @@ class Ingredient(db.Model):
 
 @login.request_loader
 def load_user(request):
-    req_data= request.get_json()
-    #token= request.args.get("token")
-    #token= request.json['token']
-    if 'token' in req_data:
-        token= req_data['token'] 
-        user= User.verify_auth_token(token)
-        print("user is: {}".format(user))
-        if user:
-            g.user= user
-            return user
-        else:
-            return None
-    if 'username' in req_data and 'password' in req_data:
-        username= req_data["username"]
-        password= req_data["password"]
-        print("username: {}".format(username))
-        print("password: {}".format(password))
-        #username= request.json['username']
-        #password= request.json['password']
-        if username is not None and password is not None:
-            user=User.query.filter_by(username=username).first()
+    try:
+        req_data= request.get_json()
+        #token= request.args.get("token")
+        #token= request.json['token']
+        if 'token' in req_data:
+            token= req_data['token'] 
+            user= User.verify_auth_token(token)
+            print("user is: {}".format(user))
+            if user:
+                g.user= user
+                return user
+            else:
+                return None
+        if 'username' in req_data and 'password' in req_data:
+            username= req_data["username"]
+            password= req_data["password"]
+            print("username: {}".format(username))
+            print("password: {}".format(password))
+            #username= request.json['username']
+            #password= request.json['password']
+            if username is not None and password is not None:
+                user=User.query.filter_by(username=username).first()
             if not user or not user.check_password(password):
                 return None
             else:
                 g.user= user
                 return user
+    except:
+        return None
     return None
 
 
