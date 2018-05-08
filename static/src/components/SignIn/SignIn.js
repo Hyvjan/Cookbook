@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import * as actionTypes from '../../store/Actions';
+import {getToken} from '../../store/Actions';
 
 class SignIn extends Component  {
 
@@ -6,8 +9,6 @@ class SignIn extends Component  {
         'username': "",
         'password':""
     }
-
-    
 
         usernameHandler = (evt) => {
             this.setState({'username': evt.target.value});
@@ -18,7 +19,8 @@ class SignIn extends Component  {
         }
 
         submitHandler = () => {
-
+            console.log("sign in clicked");
+            this.props.getToken(this.state.username, this.state.password);
         }
 
         render() {
@@ -34,9 +36,12 @@ class SignIn extends Component  {
             </div>
         ) 
     }
-        
-    
-
 }
 
-export default SignIn;
+const mapDispatchToProps = dispatch => {
+    return {
+        getToken: (username, password) => dispatch(getToken(username, password)),
+    }
+  }
+
+export default connect(null, mapDispatchToProps)(SignIn);

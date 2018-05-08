@@ -17,7 +17,8 @@ import * as actionTypes from './Actions';
 const initialState = {
     'recipes': [],
     'currentRecipe': -1,
-    'signedIn': false
+    'signedIn': false,
+    'token': null
 };
 
 const reducer = (state=initialState, action) => {
@@ -45,6 +46,13 @@ const reducer = (state=initialState, action) => {
                 ...state,
                 recipes: [...action.payload.recipes],
                 currentRecipe: action.payload.currentRecipe
+            }
+        case actionTypes.SIGN_IN:
+            console.log("reducerissa token on: " + action.token)
+            return {
+                ...state,
+                signedIn: true,
+                token: action.token
             }
         default:
             return state;
