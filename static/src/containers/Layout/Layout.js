@@ -25,10 +25,15 @@ class Layout extends Component {
   }
 */
 
-  componentDidMount() {
-    if(this.props.signedIn){
-      this.props.getRecipes();
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.signedIn !== this.props.signedIn) {
+      console.log("getRecipes laukesi layoutissa")
+      this.props.getRecipes(this.props.token);
     }
+  }
+
+  componentDidMount() {
+      
   }
 
   showIngredientsHandler = (index) => {
@@ -103,14 +108,15 @@ const mapStateToProps = state => {
     return {
       recipes: state.recipes,
       currentRecipe: state.currentRecipe,
-      signedIn: state.signedIn
+      signedIn: state.signedIn,
+      token: state.token
     }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
       setCurrentRecipe: (currentRecipe) => dispatch({type:actionTypes.CURRENT_RECIPE, currentRecipe: currentRecipe}),
-      getRecipes: () => dispatch(getRecipes())
+      getRecipes: (token) => dispatch(getRecipes(token))
   }
 }
 

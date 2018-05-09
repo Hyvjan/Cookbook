@@ -39,11 +39,11 @@ export const getToken = (username, password) => {
     }
 }
 
-export const getRecipes = () => {
+export const getRecipes = (token) => {
     return dispatch => {
-        axios.get('http://127.0.0.1:5000/recipes')
+        axios.get('http://127.0.0.1:5000/recipes?token=' + token)
             .then(response => {
-                console.log("response is: " + response.data.recipes);
+                console.log("getRecipes response is: " + response.data.recipes);
                 dispatch(addRecipes(response.data.recipes));
             })
             .catch(error => {
