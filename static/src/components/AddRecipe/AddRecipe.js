@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import classes from './AddRecipe.css';
 import axios from 'axios';
+import {postRecipe} from '../../store/actions';
+import {connect} from 'react-redux';
 
 class AddIngredient extends Component {
 
@@ -40,17 +42,8 @@ class AddIngredient extends Component {
   }
 
   postRecipe = () => {
-    const data = {
-      ...this.state.ingredients
-    };
-    axios.post('http://127.0.0.1:5000/new_recipe', data)
-            .then(response => {
-                console.log(response)
-            })
-            .catch(error => {
-              console.log(error.response)
-            });
-    }
+    this.props.postRecipe(this.state.ingredients, this.props.token);
+  }
 
   render () {
 
@@ -75,4 +68,16 @@ class AddIngredient extends Component {
 }
 };
 
-export default AddIngredient;
+const mapStateToProps = state => {
+  return {
+    token: state.token
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+      postRecipe: (ingredients, token) => dispatch(postRecipe(ingredients, token)),
+  }
+}
+
+export default  connect(mapStateToProps, mapDispatchToProps)(AddIngredient);

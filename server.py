@@ -176,7 +176,7 @@ def newRecipe():
     db.session.add(recipe)
     db.session.commit()
     for key in request.json.keys():
-        if key != 'name':
+        if key != 'name' and key != 'token':
             key= Ingredient(name=key, amount=request.json[key], unit="g")
             db.session.add(key)
             db.session.commit()

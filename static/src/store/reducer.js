@@ -54,6 +54,13 @@ const reducer = (state=initialState, action) => {
                 signedIn: true,
                 token: action.token
             }
+        case actionTypes.POST_RECIPE:
+            return {
+                ...state,
+                recipes: state.recipes.concat(action.recipe),
+                token: action.token
+            }
+
         default:
             return state;
     }

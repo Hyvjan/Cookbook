@@ -7,6 +7,15 @@ export const GET_RECIPES = 'GET_RECIPES';
 export const ADD_RECIPES = "ADD_RECIPES";
 export const SIGN_IN = "SIGN_IN";
 export const GET_TOKEN = "GET_TOKEN";
+export const POST_RECIPE= 'POST_RECIPE';
+
+export const saveRecipe = (entry, token) => {
+    return {
+        type: POST_RECIPE,
+        recipe: entry,
+        token: token
+    }
+}
 
 export const addRecipes = (response) => {
     return {
@@ -52,3 +61,18 @@ export const getRecipes = (token) => {
     }
 }
 
+export const postRecipe = (ingredients, token) => {
+    const data = {
+      ...ingredients
+    };
+    return dispatch => {
+    axios.post('http://127.0.0.1:5000/new_recipe?token=' + token, data)
+            .then(response => {
+                console.log("response flaskilta: " + response);
+                dispatch(saveRecipe(data));
+            })
+            .catch(error => {
+              console.log(error.response)
+            });
+    }
+}
