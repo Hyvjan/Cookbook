@@ -8,6 +8,7 @@ export const ADD_RECIPES = "ADD_RECIPES";
 export const SIGN_IN = "SIGN_IN";
 export const GET_TOKEN = "GET_TOKEN";
 export const POST_RECIPE= 'POST_RECIPE';
+export const AUTO_SIGNIN= 'AUTO_SIGNIN';
 
 export const saveRecipe = (entry, token) => {
     return {
@@ -40,11 +41,28 @@ export const getToken = (username, password) => {
         axios.post('http://127.0.0.1:5000/signIn', payload)
             .then(response => {
                 console.log("signIn response: " + response.data.token)
+                const validytime = new Date(new Date().getTime() + response.data.validyTime * 1000);
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('expirationTime', validytime);
                 dispatch(signIn(response.data.token))
             })
             .catch(error => {
                 console.log(error)
             });
+    }
+}
+
+export const checkTokenValidy = () => {
+    return dispatch => {
+        const token = localStorage.getItem('token');
+        console.log("luki tokenin storagesta: " + token);
+        if (token) {
+            const expirationTime = new Date(localStorage.getItem('expirationTime'));
+            if (expirationTime > new Date()) {
+                console.log("validoi paivamaaran: " + expirationTime);
+                dispatch(signIn(token));
+            }
+        }
     }
 }
 

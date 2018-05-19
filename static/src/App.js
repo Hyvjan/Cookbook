@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import Layout from './containers/Layout/Layout';
 import {BrowserRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+
+import {checkTokenValidy} from './store/Actions';
 
 class App extends Component {
+
+  componentDidMount() {
+    this.props.tryAutoSignup();
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -14,4 +22,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => {
+  return {
+    tryAutoSignup:() => dispatch(checkTokenValidy()),
+  }
+}
+
+export default connect(null, mapDispatchToProps)(App);

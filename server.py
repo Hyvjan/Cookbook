@@ -146,7 +146,8 @@ def index():
 @login_required
 def signIn():
     token= g.user.generate_auth_token(600)
-    return jsonify({'token': token.decode('ascii')})
+    return jsonify({'token': token.decode('ascii'),
+                    'validyTime': 600})
 
 #return recipes 
 @app.route('/recipes', methods=['GET'])
