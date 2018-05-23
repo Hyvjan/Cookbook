@@ -86,7 +86,9 @@ class Layout extends Component {
       </ul>
 
       content = 
-          <div>
+          <div className={classes.Entrytext}>
+            <p>Welcome to Cookbook! Please sign In if you have user account
+              or request one by sending email to santaclaus@korvatunturi.fi</p>
              <Route path="/SignIn" component={ SignIn } />
           </div>
       
