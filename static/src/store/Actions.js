@@ -6,6 +6,7 @@ export const CURRENT_RECIPE = "CURRENT_RECIPE";
 export const GET_RECIPES = 'GET_RECIPES';
 export const ADD_RECIPES = "ADD_RECIPES";
 export const SIGN_IN = "SIGN_IN";
+export const SIGN_OUT = "SIGN_OUT";
 export const GET_TOKEN = "GET_TOKEN";
 export const POST_RECIPE= 'POST_RECIPE';
 export const AUTO_SIGNIN= 'AUTO_SIGNIN';
@@ -31,6 +32,15 @@ export const signIn = (token) => {
         token: token
     }
 }
+
+export const signOut = () => {
+    console.log("signOut tavoitettu actionissa");
+    return {
+        type: SIGN_OUT
+    }
+}
+
+
 
 export const getToken = (username, password) => {
     const payload= {

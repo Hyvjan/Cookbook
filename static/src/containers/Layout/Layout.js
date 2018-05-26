@@ -3,11 +3,12 @@ import AddRecipe from '../../components/AddRecipe/AddRecipe';
 import classes from './Layout.css';
 import Recipes from '../../components/Recipes/Recipes';
 import Ingredients from '../../components/Ingredients/Ingredients';
+import Logout from '../../components/Logout/Logout';
 import { Route, Link, withRouter } from 'react-router-dom';
 
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/Actions';
-import { getRecipes} from '../../store/Actions';
+import { getRecipes, signOut} from '../../store/Actions';
 import SignIn from '../../components/SignIn/SignIn';
 
 class Layout extends Component {
@@ -62,7 +63,10 @@ class Layout extends Component {
           <p style={{marginRight:'5px'}}>Recipes</p>
         </Link>
         <Link to="/addRecipe">
-          <p>Add new Recipe</p>
+          <p style={{marginRight:'5px'}}>Add new Recipe</p>
+        </Link>
+        <Link to="/logout">
+          <p style={{marginRight:'5px'}}>Sign Out</p>
         </Link>
       </ul>
 
@@ -76,6 +80,7 @@ class Layout extends Component {
         ingredientList={this.props.recipes[this.props.currentRecipe]}
         className={classes.Box} />
       <Route path="/addRecipe" component={ AddRecipe } />
+      <Route path="/logout" component={ Logout } />
     </div>
     } else {
       linksList=
@@ -118,7 +123,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
       setCurrentRecipe: (currentRecipe) => dispatch({type:actionTypes.CURRENT_RECIPE, currentRecipe: currentRecipe}),
-      getRecipes: (token) => dispatch(getRecipes(token))
+      getRecipes: (token) => dispatch(getRecipes(token)),
+      signOut: () => dispatch(signOut()),
+
   }
 }
 

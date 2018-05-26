@@ -60,6 +60,14 @@ const reducer = (state=initialState, action) => {
                 recipes: state.recipes.concat(action.recipe),
                 token: action.token
             }
+        case actionTypes.SIGN_OUT:
+            localStorage.removeItem('token');
+            localStorage.removeItem('expirationTime')
+            return {
+                ...state,
+                signedIn: false,
+                token: null,
+            }
 
         default:
             return state;
