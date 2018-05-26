@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timedelta
 
 #Import Flask
 from flask import Flask, render_template, request, jsonify, json, Response, g
@@ -39,6 +40,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(120), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash=db.Column(db.String(128))
+    token_expiration = db.Column(db.DateTime)
     recipe = db.relationship('Recipe', backref='author', lazy='dynamic')
 
     def __repr__(self):
@@ -51,11 +53,18 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def generate_auth_token(self, expiration=600):
+        print("gemeroinnin alussa: " + str(self.username))
+        self.token_expiration = (datetime.utcnow() + timedelta(seconds=600))
+        print("tokenin expiration: " + str(self.token_expiration))
         s= Serializer(app.config['SECRET_KEY'], expires_in= expiration)
         return s.dumps({ 'id': self.id })
 
+    def revoke_auth_token(self):
+        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
+
     @staticmethod
     def verify_auth_token(token):
+        print("verify_token alussa")
         s= Serializer(app.config['SECRET_KEY'])
         try:
             data= s.loads(token)
@@ -64,7 +73,13 @@ class User(UserMixin, db.Model):
         except BadSignature:
             return None
         user= User.query.get(data['id'])
+        print("ongelmakohta expiration: " + str(User.query.get(data['id']).token_expiration))
+        print("ongelmakohta utc: " + str(datetime.utcnow()))
+        if (User.query.get(data['id']).token_expiration < datetime.utcnow()):
+            print("aikavertailu ei toiminut")
+            return None
         g.user = user
+        print("palauttaa userin")
         return user
 
 
@@ -98,6 +113,7 @@ def load_user(request):
     try:
         token=request.args.get('token')
         if token is not None:
+            print("verifioimassa tokenia loaderissa")
             user=User.verify_auth_token(token)
             if user:
                 g.user= user
@@ -146,8 +162,17 @@ def index():
 @login_required
 def signIn():
     token= g.user.generate_auth_token(600)
+    db.session.commit()
     return jsonify({'token': token.decode('ascii'),
                     'validyTime': 600})
+
+@app.route("/signOut", methods=["GET"])
+@login_required
+def signOut():
+    g.user.revoke_auth_token()
+    db.session.commit()
+    return jsonify({'message': 'token revoked'}), 200
+
 
 #return recipes 
 @app.route('/recipes', methods=['GET'])
@@ -189,4 +214,4 @@ def newRecipe():
 
 #Define main to run the server
 if __name__== "__main__":
-    app.run()
+    app.run(debug=True)

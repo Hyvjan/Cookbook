@@ -61,10 +61,13 @@ const reducer = (state=initialState, action) => {
                 token: action.token
             }
         case actionTypes.SIGN_OUT:
+            console.log("reducerissa sign_out tavoitettu");
             localStorage.removeItem('token');
             localStorage.removeItem('expirationTime')
             return {
                 ...state,
+                recipes: [],
+                currentRecipe: -1,
                 signedIn: false,
                 token: null,
             }

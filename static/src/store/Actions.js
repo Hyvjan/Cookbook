@@ -33,10 +33,24 @@ export const signIn = (token) => {
     }
 }
 
-export const signOut = () => {
-    console.log("signOut tavoitettu actionissa");
+export const revokeToken = () => {
     return {
         type: SIGN_OUT
+    }
+}
+
+export const signOut = () => {
+    console.log("signOut tavoitettu actionissa");
+    return dispatch => {
+        const token = localStorage.getItem('token');
+        axios.get('http://127.0.0.1:5000/signOut?token=' + token)
+            .then(response => {
+                console.log("revoke lahti palvelimelle");
+                dispatch(revokeToken());
+            })
+            .catch(error => {
+              console.log(error)
+            });
     }
 }
 
